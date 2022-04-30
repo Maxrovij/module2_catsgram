@@ -4,6 +4,7 @@ import java.time.Instant;
 
 public class Post {
 
+    private Integer id;
     private final String author; // автор
     private final Instant creationDate = Instant.now(); // дата создания
     private String description; // описание
@@ -13,6 +14,10 @@ public class Post {
         this.author = author;
         this.description = description;
         this.photoUrl = photoUrl;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getAuthor() {
@@ -27,12 +32,16 @@ public class Post {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getPhotoUrl() {
         return photoUrl;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setPhotoUrl(String photoUrl) {
