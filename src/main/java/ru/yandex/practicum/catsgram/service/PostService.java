@@ -10,21 +10,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
     private final List<Post> posts = new ArrayList<>();
     UserService userService;
 
-    private Integer latestId = 1;
+    private Integer latestId = 0;
 
     @Autowired
     public PostService(UserService userService) {
         this.userService = userService;
     }
 
-    public List<Post> findAll() {
-        return posts;
+    public List<Post> findAll(Integer size, String sort, Integer from) {
+
+        return posts.stream().sorted((p0, p1) -> {
+            int comp = p0.getCreationDate().compareTo(p1.getCreationDate());
+            if (sort.equals("desc")) {
+                comp = -1 * comp;
+            }
+            return comp;
+        }).skip(from).limit(size).collect(Collectors.toList());
     }
 
     public Post create(Post post) {
