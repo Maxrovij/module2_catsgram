@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -18,24 +18,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public List<User> getUsers() {
-        return userService.getUsers();
+    @GetMapping("/{login}")
+    public Optional<User> getUser(@PathVariable String login) {
+        return userService.findUserByLogin(login);
     }
-
-    @GetMapping("/user/{userMail}")
-    public User getUserByEmail(@PathVariable String userMail) {
-        return userService.findUserByEmail(userMail);
-    }
-
-    @PostMapping
-    public User addUser (@RequestBody User user) {
-        return userService.addUser(user);
-    }
-
-    @PutMapping
-    public User updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
-    }
-
 }

@@ -6,6 +6,7 @@ import ru.yandex.practicum.catsgram.exception.IncorrectParameterException;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController()
@@ -16,6 +17,13 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
+
+    @GetMapping("/posts")
+    public Collection<Post> findAllByUserId(@RequestParam String userId) {
+        return postService.findAllByUser(userId);
+    }
+
+    /*
 
     @GetMapping("/posts")
     public List<Post> findAll(@RequestParam(name = "sort", defaultValue = "desc", required = false) String sort,
@@ -41,7 +49,10 @@ public class PostController {
     }
 
     @GetMapping("post/{id}")
-    public Post getPostById(@PathVariable Integer id) {
+    public Post getPostById(@PathVariable Long id) {
         return postService.getPostById(id);
     }
+
+    */
+
 }

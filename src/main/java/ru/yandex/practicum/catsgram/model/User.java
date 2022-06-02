@@ -4,30 +4,41 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
-    private String email;
+    private String id;
     private String nickname;
-    private LocalDate birthdate;
+    private String username;
 
-    public User(String email, String nickname, String birthdate) {
-        this.email = email;
-        this.nickname = nickname;
-        this.birthdate = LocalDate.parse(birthdate);
+    public User() {
     }
 
-    public void setNickname(String nickname) {
+    public User(String id, String username, String nickname) {
+        this.id = id;
+        this.username = username;
         this.nickname = nickname;
     }
 
-    public String getEmail() {
-        return email;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -36,11 +47,11 @@ public class User {
         if(obj == null) return false;
         if(this.getClass() != obj.getClass()) return false;
         User objUser = (User) obj;
-        return Objects.equals(this.email, objUser.email);
+        return Objects.equals(this.id, objUser.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(id);
     }
 }

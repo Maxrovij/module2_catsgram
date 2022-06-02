@@ -1,17 +1,15 @@
 package ru.yandex.practicum.catsgram.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.catsgram.exception.IncorrectParameterException;
-import ru.yandex.practicum.catsgram.model.FeedParams;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.catsgram.Constants.SORTS;
 
 @RestController
 public class PostFeedController {
@@ -22,23 +20,24 @@ public class PostFeedController {
         this.postService = postService;
     }
 
-    @PostMapping("/feed/friends")
-    List<Post> getFriendsFeed(@RequestBody FeedParams feedParams) {
-        if (!SORTS.contains(feedParams.getSort())) {
-            throw new IncorrectParameterException("sort");
-        }
-        if (feedParams.getFriendsEmails().isEmpty()) {
-            throw new IncorrectParameterException("friendsEmails");
-        }
+    @GetMapping("/feed")
+    public Collection<Post> findPostByUser(@RequestParam String userId,
+                                           @RequestParam Integer size,
+                                           @RequestParam String sort) {
+        return postService.findAllByUser(userId).stream()
+                .sorted((p1, p2) -> {
+                    int comp = p1.getCreationDate().compareTo(p2.getCreationDate());
+                    if (sort.equals("desc")) {
+                        comp = -1 * comp;
+                    }
+                    return comp;
+                })
+                .limit(size)
+                .collect(Collectors.toList());
+    }
 
-        if (feedParams.getSize() == null || feedParams.getSize() <= 0) {
-            throw new IncorrectParameterException("size");
-        }
-
-        List<Post> result = new ArrayList<>();
-        for (String friendEmail : feedParams.getFriendsEmails()) {
-            result.addAll(postService.findAllByEmail(friendEmail, feedParams.getSize(), feedParams.getSort()));
-        }
-        return result;
+    @GetMapping("/feed/following")
+    public List<Post> getFollowingFeed(@RequestParam String userId, @RequestParam int max) {
+        return postService.getFollowingFeed(userId, max);
     }
 }
